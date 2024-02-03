@@ -13,7 +13,10 @@ function App() {
       <Provider store={store}>
         <GlobalStyles
           styles={{
-            body: { backgroundColor: theme.palette.grey[100] },
+            body: { backgroundColor: theme.palette.grey[200] },
+            '*': {
+              boxSizing: 'border-box',
+            },
           }}
         />
         <RouterProvider router={router} />

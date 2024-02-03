@@ -1,5 +1,6 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import Home from '../containers/home/index.tsx';
+import Chat from '../containers/chat/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -8,7 +9,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/chat',
-    element: <h1>Chat</h1>,
+    element: <Chat />,
   },
   {
     path: '*',

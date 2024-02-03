@@ -3,15 +3,20 @@ import {
   Button, Paper, Stack, TextField, Typography,
 } from '@mui/material';
 
+import { useNavigate } from 'react-router-dom';
 import { chatSliceAction } from '../../redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 const { setName } = chatSliceAction;
 const Home = () => {
-  const name = useAppSelector((state) => state.chat.name);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const name = useAppSelector((state) => state.chat.name);
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     dispatch(setName(e.target.value));
+  };
+  const onEnter = () => {
+    navigate('/chat');
   };
   return (
     <Stack
@@ -43,6 +48,7 @@ const Home = () => {
             onChange={onNameChange}
           />
           <Button
+            onClick={onEnter}
             variant="contained"
           >
             Enter
