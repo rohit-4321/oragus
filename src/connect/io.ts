@@ -8,6 +8,9 @@ type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerE
 type SocketFunc = (s: AppSocket) => void
 
 const userQueue = new SocketQueue<AppSocket>([]);
+const connectesClient: {
+    [key: string]: AppSocket
+} = {};
 export const generateSocketInstance = (httpServer: HttpServer<typeof IncomingMessage, typeof ServerResponse>) => {
     const io = new Server<
     ClientToServerEvents,
@@ -22,6 +25,7 @@ export const generateSocketInstance = (httpServer: HttpServer<typeof IncomingMes
         console.log(`Socket connected with id ${socket.id}`);
         requestJoin(socket);
         onMessage(socket);
+        onDisconnect(socket);
     });
     return io;
 };
@@ -42,6 +46,8 @@ const requestJoin: SocketFunc= (socket) => {
             if(recp){
 
                 exchangeUserData(socket, recp);
+                connectesClient[socket.id] = socket;
+                connectesClient[recp.id] = recp;
                 socket.emit('userJoin', {
                     name: recp.data.userName
                 });
@@ -62,6 +68,26 @@ const onMessage: SocketFunc = (socket) => {
                 ...data,
                 isSelf: false
             });
+        }
+    });
+};
+
+const onDisconnect: SocketFunc = (socket) => {
+    socket.on('disconnect', (reason) => {
+        if(socket.data.recipientId){
+            socket.to(socket.data.recipientId).emit('userLeave', reason);
+            const recp = connectesClient[socket.data.recipientId];
+            recp.data.recipientId = undefined;
+            recp.data.recipientUserName = undefined;
+            delete connectesClient[socket.id];
+        }
+    });
+    socket.on('requestLeave', () => {
+        if(socket.data.recipientId){
+            socket.to(socket.data.recipientId).emit('userLeave', null);
+            const recp = connectesClient[socket.data.recipientId];
+            recp.data.recipientId = undefined;
+            recp.data.recipientUserName = undefined;
         }
     });
 };
