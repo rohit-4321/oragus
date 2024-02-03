@@ -11,7 +11,7 @@ type Message = {
 export interface ServerToClientEvents {
   userJoin: (params: OnJoinParams) => void
   onMessage: (params: Message) => void
-  userLeave: () => void
+  userLeave: (param: unknown) => void
 }
 
 
@@ -27,8 +27,8 @@ export interface ClientToServerEvents {
 export interface ISocketData{
   id: string,
   userName: string,
-  recipientId: string,
-  recipientUserName: string,
+  recipientId?: string,
+  recipientUserName?: string,
 }
 
 
