@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import { createTheme } from '@mui/material';
 import shadows from '@mui/material/styles/shadows';
 
@@ -31,7 +30,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           ':hover': {
-            backgroundColor: '#60d477',
             boxShadow: 'none',
           },
         },
@@ -42,6 +40,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: [
+      'Roboto Mono',
       '-apple-system',
       'BlinkMacSystemFont',
       '"Segoe UI"',
@@ -53,6 +52,15 @@ const theme = createTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(','),
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 950,
+      lg: 1200,
+      xl: 1536,
+    },
   },
   shadows: {
     ...shadows,
