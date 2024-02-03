@@ -1,13 +1,18 @@
-import { FC } from 'react';
-import { Box } from '@mui/material';
+import {
+  GlobalStyles, ThemeProvider,
+} from '@mui/material';
+import theme from './global/theme.ts';
 
-const App: FC = () => (
-  <Box sx={{
-    scrollMarginBlock: 'ASD',
-  }}
-  >
-    asdasd
-  </Box>
-);
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: theme.palette.grey[100] },
+        }}
+      />
+    </ThemeProvider>
+  );
+}
 
 export default App;
