@@ -18,6 +18,28 @@ const theme = createTheme({
       contrastText: '#0d0e09',
     },
   },
+  components: {
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+
+      },
+    },
+    MuiButton: {
+      defaultProps: {
+      },
+      styleOverrides: {
+        root: {
+          ':hover': {
+            backgroundColor: '#60d477',
+            boxShadow: 'none',
+          },
+        },
+        disableElevation: true,
+        disabled: true,
+      },
+    },
+  },
   typography: {
     fontFamily: [
       '-apple-system',
