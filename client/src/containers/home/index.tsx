@@ -6,6 +6,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { chatSliceAction } from '../../redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { requestJoinSocketAction } from '../../redux/middlewares/actions';
 
 const { setName } = chatSliceAction;
 const Home = () => {
@@ -16,7 +17,10 @@ const Home = () => {
     dispatch(setName(e.target.value));
   };
   const onEnter = () => {
-    navigate('/chat');
+    if (name) {
+      navigate('/chat');
+      dispatch(requestJoinSocketAction());
+    }
   };
   return (
     <Stack

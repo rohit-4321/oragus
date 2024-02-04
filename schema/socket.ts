@@ -2,7 +2,7 @@ type OnJoinParams = {
   name: string
 }
 
-type Message = {
+export type IMessage = {
   isSelf: boolean,
   message: string,
   id: string
@@ -10,7 +10,7 @@ type Message = {
 
 export interface ServerToClientEvents {
   userJoin: (params: OnJoinParams) => void
-  onMessage: (params: Message) => void
+  onMessage: (params: IMessage) => void
   userLeave: (param: unknown) => void
 }
 
@@ -21,7 +21,7 @@ type RequestJoinParam = {
 
 export interface ClientToServerEvents {
   requestJoin: (params: RequestJoinParam) => void
-  message: (params: Message) => void
+  message: (params: IMessage) => void
   requestLeave: () => void
 }
 export interface ISocketData{
