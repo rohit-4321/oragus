@@ -1,16 +1,13 @@
+import {IChatMessage} from './messages_schema';
+
 type OnJoinParams = {
   name: string
 }
 
-export type IMessage = {
-  isSelf: boolean,
-  message: string,
-  id: string
-}
 
 export interface ServerToClientEvents {
   userJoin: (params: OnJoinParams) => void
-  onMessage: (params: IMessage) => void
+  onMessage: (params: IChatMessage) => void
   userLeave: (param: unknown) => void
 }
 
@@ -21,7 +18,7 @@ type RequestJoinParam = {
 
 export interface ClientToServerEvents {
   requestJoin: (params: RequestJoinParam) => void
-  message: (params: IMessage) => void
+  message: (params: IChatMessage) => void
   requestLeave: () => void
 }
 export interface ISocketData{
