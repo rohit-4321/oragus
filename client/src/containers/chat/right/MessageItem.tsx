@@ -3,10 +3,10 @@ import {
   Paper, Stack, Typography,
 } from '@mui/material';
 import { FC, memo } from 'react';
-import { IMessage } from '../../../../../schema/socket';
+import { IChatTextMessage } from '../../../../../schema/messages_schema';
 
 type MessageItemProps = {
-    message: IMessage
+    message: IChatTextMessage
 }
 export const MessageItem = memo(({ message }: MessageItemProps) => (
   message.isSelf
@@ -14,7 +14,7 @@ export const MessageItem = memo(({ message }: MessageItemProps) => (
 ));
 
 const SelfChatMessage:FC<{
-    message: IMessage
+    message: IChatTextMessage
 }> = ({ message }) => (
   <Stack justifyContent="center" alignItems="end">
     <Paper
@@ -35,7 +35,7 @@ const SelfChatMessage:FC<{
   </Stack>
 );
 const RecipientChatMessage:FC<{
-    message: IMessage
+    message: IChatTextMessage
 }> = ({ message }) => (
   <Stack justifyContent="center" alignItems="start">
     <Paper
@@ -43,7 +43,6 @@ const RecipientChatMessage:FC<{
         minWidth: '300px',
         maxWidth: '40%',
         backgroundColor: theme.palette.grey[100],
-        // color: theme.palette.secondary.contrastText,
         px: 2,
         py: 1,
         borderRadius: 1,

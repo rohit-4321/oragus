@@ -36,7 +36,7 @@ const onDisConnect = () => {
 const onMessage = (socket:Socket<ServerToClientEvents, ClientToServerEvents>) => {
   socket.on('onMessage', (mes) => {
     store.dispatch(pushMessage({
-      ...mes,
+      ...mes.content.messageData,
       isSelf: false,
     }));
   });

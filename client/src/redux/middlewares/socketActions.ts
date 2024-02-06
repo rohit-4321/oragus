@@ -21,7 +21,13 @@ export function socketInitMessageListening() {
       };
       listenerApi.dispatch(pushMessage(message));
       if (!socket) return;
-      socket.emit('message', message);
+      socket.emit('message', {
+        messageType: 'chat',
+        content: {
+          contentType: 'text',
+          messageData: message,
+        },
+      });
     },
   });
 }

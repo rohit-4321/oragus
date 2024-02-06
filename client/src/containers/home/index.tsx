@@ -6,7 +6,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { chatSliceAction } from '../../redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { requestJoinSocketAction } from '../../redux/middlewares/actions';
+import { requestJoinSocketAction } from '../../redux/middlewares/socketActions';
 
 const { setName } = chatSliceAction;
 const Home = () => {

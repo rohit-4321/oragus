@@ -8,7 +8,7 @@ import theme from './global/theme/theme.ts';
 import router from './global/routes/index.tsx';
 import store from './redux/store.ts';
 import { socketInit } from './redux/middlewares/socketInit';
-import { socketInitMessageListening, socketInitRequesJoinListener, socketInitRequestLeaveListener } from './redux/middlewares/actions.ts';
+import { socketInitMessageListening, socketInitRequesJoinListener, socketInitRequestLeaveListener } from './redux/middlewares/socketActions.ts';
 
 function App() {
   useLayoutEffect(() => {

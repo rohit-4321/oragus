@@ -2,7 +2,7 @@ import { Stack, TextField, Button } from '@mui/material';
 import { useState } from 'react';
 import theme from '../../../global/theme/theme';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { sendMessageSocketAction } from '../../../redux/middlewares/actions';
+import { sendMessageSocketAction } from '../../../redux/middlewares/socketActions';
 
 export const MessageInput = () => {
   const recipientState = useAppSelector((state) => state.chat.recipientState);
