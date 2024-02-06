@@ -63,11 +63,14 @@ const requestJoin: SocketFunc= (socket) => {
 
 const onMessage: SocketFunc = (socket) => {
     socket.on('message', (data) => {
-        if(socket.data.recipientId){
-            socket.to(socket.data.recipientId).emit('onMessage', {
-                ...data,
-                isSelf: false
-            });
+        if(data.messageType === 'chat'
+        && data.content.contentType === 'text'){
+            if(socket.data.recipientId){
+                data.content.messageData.isSelf = false,
+                socket.to(socket.data.recipientId).emit('onMessage', {
+                    ...data,
+                });
+            }
         }
     });
 };

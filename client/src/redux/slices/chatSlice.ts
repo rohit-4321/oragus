@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IMessage } from '../../../../schema/socket';
+import { IChatTextMessage } from '../../../../schema/messages_schema';
 
 type ChatSliceState = {
   name: string,
@@ -14,7 +14,7 @@ type ChatSliceState = {
   } | {
     state: 'loading'
   }
-  message: IMessage[]
+  message: IChatTextMessage[]
 }
 
 const initialState : ChatSliceState = {
@@ -36,7 +36,7 @@ const chatSlice = createSlice({
     setConnectStatus: (state, action: PayloadAction<ChatSliceState['connectStatus']>) => {
       state.connectStatus = action.payload;
     },
-    pushMessage: (state, action: PayloadAction<IMessage>) => {
+    pushMessage: (state, action: PayloadAction<IChatTextMessage>) => {
       state.message.push(action.payload);
     },
     emptyMessageList: (state) => {

@@ -7,7 +7,7 @@ import { MessageInput } from './MessageInput';
 import { MessageItem } from './MessageItem';
 import { Searching } from './Searching';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { requestJoinSocketAction, requestLeaveSocketAction } from '../../../redux/middlewares/actions';
+import { requestJoinSocketAction, requestLeaveSocketAction } from '../../../redux/middlewares/socketActions';
 
 export const ChatWindow = () => {
   const lastRecipientName = useAppSelector((state) => state.chat.lastRecipientName);
