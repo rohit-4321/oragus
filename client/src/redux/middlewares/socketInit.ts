@@ -3,10 +3,10 @@ import { Socket, io } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '../../../../schema/socket';
 import { chatSliceAction } from '../slices/chatSlice';
 import store from '../store';
+import { chatMessageHandle } from './messageHandler';
 
 const {
   setConnectStatus,
-  pushMessage,
   setRecipientState,
   emptyMessageList,
 } = chatSliceAction;
@@ -34,13 +34,9 @@ const onDisConnect = () => {
 };
 
 const onMessage = (socket:Socket<ServerToClientEvents, ClientToServerEvents>) => {
-  socket.on('onMessage', (mes) => {
-    store.dispatch(pushMessage({
-      ...mes.content.messageData,
-      isSelf: false,
-    }));
-  });
+  socket.on('onMessage', chatMessageHandle);
 };
+
 const onUserJoin = (socket:Socket<ServerToClientEvents, ClientToServerEvents>) => {
   socket.on('userJoin', (recipientData) => {
     store.dispatch(setRecipientState({
