@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IChatTextMessage } from '../../../../schema/messages_schema';
+import { IChatTextMessage } from '../../../../schema';
 
 type ChatSliceState = {
   name: string,

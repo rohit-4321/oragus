@@ -3,7 +3,7 @@ import {
   Paper, Stack, Typography,
 } from '@mui/material';
 import { FC, memo } from 'react';
-import { IChatTextMessage } from '../../../../../schema/messages_schema';
+import { IChatTextMessage } from '../../../../../schema';
 
 type MessageItemProps = {
     message: IChatTextMessage
