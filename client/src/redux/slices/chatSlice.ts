@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IChatTextMessage } from '../../../../schema';
 
-type ChatSliceState = {
+export type ChatSliceState = {
   name: string,
   connectStatus: 'connected' | 'disconnected',
   lastRecipientName?: string,
