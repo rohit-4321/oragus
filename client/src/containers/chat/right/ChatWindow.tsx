@@ -8,6 +8,8 @@ import { MessageItem } from './MessageItem';
 import { Searching } from './Searching';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { requestJoinSocketAction, requestLeaveSocketAction } from '../../../redux/middlewares/socketActions';
+import { ChatSliceState } from '../../../redux/slices/chatSlice';
+import { IChatTextMessage } from '../../../../../schema';
 
 export const ChatWindow = () => {
   const lastRecipientName = useAppSelector((state) => state.chat.lastRecipientName);
@@ -24,36 +26,50 @@ export const ChatWindow = () => {
   return (
     <Stack height="100%">
       <ChatHeader />
-      <Box
-        overflow="auto"
-        flex={1}
-        px={1}
-        pt={1}
-      >
-        <Stack gap={1} mb={1}>
-          {
-            messages.map((kl) => <MessageItem key={kl.id} message={kl} />)
-          }
-        </Stack>
-        <Typography color={(theme) => theme.palette.grey[600]}>
-          {
-            recipientState.state === 'disconnected'
-                && recipientState.reason === 'recipientClose'
-                && lastRecipientName !== undefined
-                && `${lastRecipientName} ended the conversation...`
-          }
-          {
-            recipientState.state === 'disconnected'
-                && recipientState.reason === 'selfClose'
-                && lastRecipientName !== undefined
-                && 'Conversation ended....'
-          }
-
-        </Typography>
-
-      </Box>
+      <ChatsMessages
+        messages={messages}
+        lastRecipientName={lastRecipientName}
+        recipientState={recipientState}
+      />
       <MessageInput />
     </Stack>
+  );
+};
+
+const ChatsMessages = (props: {
+  messages: IChatTextMessage[],
+  lastRecipientName: string | undefined,
+  recipientState: ChatSliceState['recipientState']
+}) => {
+  const { lastRecipientName, messages, recipientState } = props;
+  return (
+    <Box
+      overflow="auto"
+      flex={1}
+      px={1}
+      pt={1}
+    >
+      <Stack gap={1} mb={1}>
+        {
+          messages.map((kl) => <MessageItem key={kl.id} message={kl} />)
+        }
+      </Stack>
+      <Typography color={(theme) => theme.palette.grey[600]}>
+        {
+          recipientState.state === 'disconnected'
+          && recipientState.reason === 'recipientClose'
+          && lastRecipientName !== undefined
+          && `${lastRecipientName} ended the conversation...`
+        }
+        {
+          recipientState.state === 'disconnected'
+          && recipientState.reason === 'selfClose'
+          && lastRecipientName !== undefined
+          && 'Conversation ended....'
+        }
+
+      </Typography>
+    </Box>
   );
 };
 
