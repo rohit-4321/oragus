@@ -67,3 +67,62 @@ export function socketInitRequestLeaveListener() {
     },
   });
 }
+
+/* Send Ice candidate */
+export const sendIceCandidateSocketAction = createAction<RTCIceCandidate | null>(getActionName('sendIceCandidate'));
+export function socketInitSendIceCandidateListener() {
+  return startAppListening({
+    actionCreator: sendIceCandidateSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcIceCandidate',
+          data: action.payload,
+        },
+      });
+    },
+  });
+}
+
+/* Send RTC Offer */
+export const sendRTCOfferSocketAction = createAction<RTCSessionDescription>(getActionName('sendRTCOffer'));
+export function socketInitSendRtcOfferListerner() {
+  return startAppListening({
+    actionCreator: sendRTCOfferSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      console.log('offerrrrrrrrr');
+      console.log(action);
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcOffer',
+          data: action.payload,
+        },
+      });
+    },
+  });
+}
+
+/* Send RTC Answer */
+export const sendRTCAnswerSocketAction = createAction<RTCSessionDescription>(getActionName('sendRTCAnswer'));
+export function socketInitSendRtcAnswerListener() {
+  return startAppListening({
+    actionCreator: sendRTCAnswerSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcAnswer',
+          data: action.payload,
+        },
+      });
+    },
+  });
+}

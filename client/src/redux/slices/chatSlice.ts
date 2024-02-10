@@ -17,8 +17,10 @@ export type ChatSliceState = {
     isCaller: boolean
   } | {
     state: 'loading'
-  }
-  message: IChatTextMessage[]
+  },
+  message: IChatTextMessage[],
+  remoteIceCand?: RTCIceCandidate | null,
+  remoteDescription?: RTCSessionDescription
 }
 
 const initialState : ChatSliceState = {
@@ -57,6 +59,12 @@ const chatSlice = createSlice({
       if (action.payload.state === 'connected') {
         state.lastRecipientName = action.payload.name;
       }
+    },
+    setRemoteIceCand: (state, action: PayloadAction<RTCIceCandidate>) => {
+      state.remoteIceCand = action.payload;
+    },
+    setRemoteDescription: (state, action: PayloadAction<RTCSessionDescription>) => {
+      state.remoteDescription = action.payload;
     },
   },
 });
