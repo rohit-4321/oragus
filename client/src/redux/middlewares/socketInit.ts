@@ -1,15 +1,9 @@
 /* eslint-disable no-use-before-define */
 import { Socket, io } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '../../../../schema/socket';
-import { chatSliceAction } from '../slices/chatSlice';
-import store from '../store';
-import { chatMessageHandle } from './messageHandler';
-
-const {
-  setConnectStatus,
-  setRecipientState,
-  emptyMessageList,
-} = chatSliceAction;
+import {
+  onConnect, onDisConnect, onMessage, onUserJoin, onUserLeave,
+} from './socketListeners';
 
 let socketInstance: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
 
@@ -24,34 +18,3 @@ export const socketInit = () => {
   }
 };
 export const getSocket = () => socketInstance;
-
-const onConnect = () => {
-  store.dispatch(setConnectStatus('connected'));
-};
-
-const onDisConnect = () => {
-  store.dispatch(setConnectStatus('disconnected'));
-};
-
-const onMessage = (socket:Socket<ServerToClientEvents, ClientToServerEvents>) => {
-  socket.on('onMessage', chatMessageHandle);
-};
-
-const onUserJoin = (socket:Socket<ServerToClientEvents, ClientToServerEvents>) => {
-  socket.on('userJoin', (recipientData) => {
-    store.dispatch(setRecipientState({
-      state: 'connected',
-      name: recipientData.name,
-    }));
-    store.dispatch(emptyMessageList());
-  });
-};
-
-const onUserLeave = (socket:Socket<ServerToClientEvents, ClientToServerEvents>) => {
-  socket.on('userLeave', () => {
-    store.dispatch(setRecipientState({
-      state: 'disconnected',
-      reason: 'recipientClose',
-    }));
-  });
-};

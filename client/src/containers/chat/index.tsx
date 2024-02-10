@@ -6,9 +6,10 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChatWindow } from './right/ChatWindow';
 import { useAppSelector } from '../../redux/hooks';
+import { VideoWindow } from './left/VideoWndow';
 
 const Chat = () => {
-  const userName = useAppSelector((state) => state.chat.name);
+  const userName = useAppSelector((state) => state.chat.selfState.name);
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,7 +42,9 @@ const Chat = () => {
             minHeight: isSmall ? '200px' : '100%',
           }}
           elevation={1}
-        />
+        >
+          <VideoWindow />
+        </Paper>
         <Paper
           sx={isSmall ? {
             height: `calc(100% - 200px - ${gap})`,
