@@ -76,6 +76,11 @@ const onMessage: SocketFunc = (socket) => {
                 });
             }
         }
+        if(data.messageType == 'rtc'){
+            if(socket.data.recipientId){
+                socket.to(socket.data.recipientId).emit('onMessage', data);
+            }
+        }
     });
 };
 

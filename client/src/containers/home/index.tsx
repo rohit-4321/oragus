@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useRef } from 'react';
 import {
   Button, Paper, Stack, TextField, Typography,
 } from '@mui/material';
@@ -12,6 +12,7 @@ const { setName } = chatSliceAction;
 const Home = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const enterButtonRef = useRef<HTMLButtonElement>(null);
   const name = useAppSelector((state) => state.chat.selfState.name);
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     dispatch(setName(e.target.value));
@@ -47,11 +48,18 @@ const Home = () => {
           </Typography>
           <TextField
             size="small"
+            onKeyDown={(ev) => {
+              if (ev.key === 'Enter') {
+                ev.preventDefault();
+                enterButtonRef.current?.focus();
+              }
+            }}
             placeholder="Enter your name"
             value={name}
             onChange={onNameChange}
           />
           <Button
+            ref={enterButtonRef}
             onClick={onEnter}
             variant="contained"
           >

@@ -16,8 +16,9 @@ export const useVideoRef = () => {
   const remoteStream = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (!pc || !(remoteIceCad === undefined)) return;
-    pc.addIceCandidate(remoteIceCad);
+    if (pc) {
+      pc.addIceCandidate(remoteIceCad === null ? undefined : remoteIceCad);
+    }
   }, [remoteIceCad]);
 
   useEffect(() => {
@@ -39,14 +40,22 @@ export const useVideoRef = () => {
       }
     };
     const handleDescriptRecieved = async () => {
-      console.log('remote', remoteDescription);
       if (remoteDescription) {
         if (remoteDescription.type === 'offer') {
           console.log('Calleee');
           pc = new RTCPeerConnection(RTC_SERVERS);
+          pc.ontrack = (ev) => {
+            if (remoteStream.current && !remoteStream.current.srcObject) {
+              // eslint-disable-next-line prefer-destructuring
+              remoteStream.current.srcObject = ev.streams[0];
+            }
+          };
+          pc.onicecandidate = (iceCand) => {
+            dispatch(sendIceCandidateSocketAction(iceCand.candidate));
+          };
           try {
             await pc.setRemoteDescription(remoteDescription);
-            setMedia();
+            await setMedia();
             const ans = await pc.createAnswer();
             await pc.setLocalDescription(ans);
           } catch (err) {
@@ -58,17 +67,6 @@ export const useVideoRef = () => {
           } else {
             console.error('IN APP: answer in local description in empty');
           }
-          // .send({ desc: pc.localDescription });
-          pc.onicecandidate = (iceCand) => {
-            dispatch(sendIceCandidateSocketAction(iceCand.candidate));
-          };
-          pc.ontrack = (ev) => {
-            console.log('Calle remote media set');
-            if (remoteStream.current && !remoteStream.current.srcObject) {
-              // eslint-disable-next-line prefer-destructuring
-              remoteStream.current.srcObject = ev.streams[0];
-            }
-          };
         }
       }
 
@@ -77,20 +75,6 @@ export const useVideoRef = () => {
       }
     };
     handleDescriptRecieved();
-    return () => {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach((track) => {
-          track.stop();
-        });
-      }
-      if (pc) {
-        pc.close();
-        pc.onicecandidate = null;
-        pc.onnegotiationneeded = null;
-        pc.ontrack = null;
-        pc = null;
-      }
-    };
   }, [remoteDescription, dispatch]);
 
   useEffect(() => {
@@ -101,6 +85,7 @@ export const useVideoRef = () => {
           mediaStream.getTracks().forEach(
             (track) => {
               if (pc && mediaStream) {
+                console.log('Putting track--->>>>>>>>>>>');
                 pc.addTrack(track, mediaStream);
               }
             },
@@ -111,39 +96,42 @@ export const useVideoRef = () => {
         console.error('Camera Err', err);
       }
     };
-    if (isCaller) {
-      console.log('Caller');
-      pc = new RTCPeerConnection(RTC_SERVERS);
-      pc.ontrack = (ev) => {
-        if (remoteStream.current && !remoteStream.current.srcObject) {
-          // eslint-disable-next-line prefer-destructuring
-          remoteStream.current.srcObject = ev.streams[0];
-        }
-      };
-      pc.onicecandidate = (iceCand) => {
-        dispatch(sendIceCandidateSocketAction(iceCand.candidate));
-      };
-      setMedia();
-      pc.onnegotiationneeded = async () => {
-        if (pc) {
-          try {
-            const offer = await pc.createOffer();
-            console.log('offer');
-            console.log(offer);
-            await pc.setLocalDescription(offer);
-            const localDes = pc.localDescription;
-            console.log(pc.localDescription);
-            if (localDes) {
-              dispatch(sendRTCOfferSocketAction(localDes));
-            } else {
-              console.error('Local Description of caller in empty');
-            }
-          } catch (err) {
-            console.error('In APP: Error in creating Offer', err);
+    const init = async () => {
+      if (isCaller) {
+        console.log('Caller');
+        pc = new RTCPeerConnection(RTC_SERVERS);
+        pc.onicecandidate = (iceCand) => {
+          dispatch(sendIceCandidateSocketAction(iceCand.candidate));
+        };
+        pc.ontrack = (ev) => {
+          if (remoteStream.current && !remoteStream.current.srcObject) {
+            console.log('Caller remote media set->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
+
+            // eslint-disable-next-line prefer-destructuring
+            remoteStream.current.srcObject = ev.streams[0];
           }
-        }
-      };
-    }
+        };
+        await setMedia();
+        pc.onnegotiationneeded = async () => {
+          if (pc) {
+            try {
+              const offer = await pc.createOffer();
+
+              await pc.setLocalDescription(offer);
+              const localDes = pc.localDescription;
+              if (localDes) {
+                dispatch(sendRTCOfferSocketAction(localDes));
+              } else {
+                console.error('Local Description of caller in empty');
+              }
+            } catch (err) {
+              console.error('In APP: Error in creating Offer', err);
+            }
+          }
+        };
+      }
+    };
+    init();
     return () => {
       if (pc) {
         pc.close();
