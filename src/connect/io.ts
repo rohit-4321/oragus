@@ -37,6 +37,9 @@ const exchangeUserData = (u1: AppSocket, u2: AppSocket) => {
 
     u2.data.recipientUserName = u1.data.userName;
     u2.data.recipientId = u1.id;
+
+    u1.data.isCaller = false;
+    u2.data.isCaller = true;
 };
 const requestJoin: SocketFunc= (socket) => {
     socket.on('requestJoin', (data) => {
@@ -44,15 +47,16 @@ const requestJoin: SocketFunc= (socket) => {
         if(!userQueue.isEmpty()){
             const recp = userQueue.dequeue();
             if(recp){
-
                 exchangeUserData(socket, recp);
                 connectesClient[socket.id] = socket;
                 connectesClient[recp.id] = recp;
                 socket.emit('userJoin', {
-                    name: recp.data.userName
+                    name: recp.data.userName,
+                    isCaller: recp.data.isCaller
                 });
                 recp.emit('userJoin', {
-                    name: socket.data.userName
+                    name: socket.data.userName,
+                    isCaller: socket.data.isCaller
                 });
             }
         }else{

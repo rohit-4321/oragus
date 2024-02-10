@@ -1,7 +1,8 @@
 import {IChatMessage} from './messages_schema';
 
 type OnJoinParams = {
-  name: string
+  name: string,
+  isCaller: boolean
 }
 
 
@@ -26,6 +27,7 @@ export interface ISocketData{
   userName: string,
   recipientId?: string,
   recipientUserName?: string,
+  isCaller: boolean
 }
 
 

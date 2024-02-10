@@ -40,7 +40,7 @@ export function socketInitRequesJoinListener() {
     effect: (_, listenerApi) => {
       const socket = getSocket();
       if (!socket) return;
-      const { name } = listenerApi.getState().chat;
+      const { selfState: { name } } = listenerApi.getState().chat;
       if (name) {
         socket.emit('requestJoin', { userName: name });
         listenerApi.dispatch(setRecipientState({

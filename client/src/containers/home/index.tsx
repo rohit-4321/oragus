@@ -12,7 +12,7 @@ const { setName } = chatSliceAction;
 const Home = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const name = useAppSelector((state) => state.chat.name);
+  const name = useAppSelector((state) => state.chat.selfState.name);
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     dispatch(setName(e.target.value));
   };

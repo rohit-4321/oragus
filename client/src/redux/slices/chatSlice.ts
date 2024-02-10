@@ -2,7 +2,10 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IChatTextMessage } from '../../../../schema';
 
 export type ChatSliceState = {
-  name: string,
+  selfState: {
+    name: string,
+    isCaller?: boolean
+  },
   connectStatus: 'connected' | 'disconnected',
   lastRecipientName?: string,
   recipientState: {
@@ -11,6 +14,7 @@ export type ChatSliceState = {
   } | {
     state: 'connected'
     name: string,
+    isCaller: boolean
   } | {
     state: 'loading'
   }
@@ -18,7 +22,10 @@ export type ChatSliceState = {
 }
 
 const initialState : ChatSliceState = {
-  name: '',
+  selfState: {
+    name: '',
+    isCaller: undefined,
+  },
   connectStatus: 'disconnected',
   recipientState: {
     state: 'disconnected',
@@ -31,7 +38,10 @@ const chatSlice = createSlice({
   name: 'chat',
   reducers: {
     setName: (state, action:PayloadAction<string>) => {
-      state.name = action.payload;
+      state.selfState.name = action.payload;
+    },
+    setSelfIsCallerState: (state, action: PayloadAction<boolean>) => {
+      state.selfState.isCaller = action.payload;
     },
     setConnectStatus: (state, action: PayloadAction<ChatSliceState['connectStatus']>) => {
       state.connectStatus = action.payload;
