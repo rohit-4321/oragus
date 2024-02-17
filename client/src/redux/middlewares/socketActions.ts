@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { createAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import chatSlice from '../slices/chatSlice';
@@ -69,7 +70,7 @@ export function socketInitRequestLeaveListener() {
 }
 
 /* Send Ice candidate */
-export const sendIceCandidateSocketAction = createAction<RTCIceCandidate | null>(getActionName('sendIceCandidate'));
+export const sendIceCandidateSocketAction = createAction<RTCIceCandidateInit | null>(getActionName('sendIceCandidate'));
 export function socketInitSendIceCandidateListener() {
   return startAppListening({
     actionCreator: sendIceCandidateSocketAction,
@@ -88,15 +89,13 @@ export function socketInitSendIceCandidateListener() {
 }
 
 /* Send RTC Offer */
-export const sendRTCOfferSocketAction = createAction<RTCSessionDescription>(getActionName('sendRTCOffer'));
+export const sendRTCOfferSocketAction = createAction<RTCSessionDescriptionInit>(getActionName('sendRTCOffer'));
 export function socketInitSendRtcOfferListerner() {
   return startAppListening({
     actionCreator: sendRTCOfferSocketAction,
     effect: (action) => {
       const socket = getSocket();
       if (!socket) return;
-      console.log('offerrrrrrrrr');
-      console.log(action);
       socket.emit('message', {
         messageType: 'rtc',
         content: {
@@ -109,7 +108,7 @@ export function socketInitSendRtcOfferListerner() {
 }
 
 /* Send RTC Answer */
-export const sendRTCAnswerSocketAction = createAction<RTCSessionDescription>(getActionName('sendRTCAnswer'));
+export const sendRTCAnswerSocketAction = createAction<RTCSessionDescriptionInit>(getActionName('sendRTCAnswer'));
 export function socketInitSendRtcAnswerListener() {
   return startAppListening({
     actionCreator: sendRTCAnswerSocketAction,

@@ -42,7 +42,6 @@ export const useVideoRef = () => {
     const handleDescriptRecieved = async () => {
       if (remoteDescription) {
         if (remoteDescription.type === 'offer') {
-          console.log('Calleee');
           pc = new RTCPeerConnection(RTC_SERVERS);
           pc.ontrack = (ev) => {
             if (remoteStream.current && !remoteStream.current.srcObject) {
@@ -51,7 +50,10 @@ export const useVideoRef = () => {
             }
           };
           pc.onicecandidate = (iceCand) => {
-            dispatch(sendIceCandidateSocketAction(iceCand.candidate));
+            const candidate = iceCand.candidate?.toJSON();
+            if (candidate) {
+              dispatch(sendIceCandidateSocketAction(candidate));
+            }
           };
           try {
             await pc.setRemoteDescription(remoteDescription);
@@ -63,7 +65,10 @@ export const useVideoRef = () => {
           }
           const localDes = pc.localDescription;
           if (localDes) {
-            dispatch(sendRTCAnswerSocketAction(localDes));
+            dispatch(sendRTCAnswerSocketAction({
+              type: localDes.type,
+              sdp: localDes.sdp,
+            }));
           } else {
             console.error('IN APP: answer in local description in empty');
           }
@@ -85,7 +90,6 @@ export const useVideoRef = () => {
           mediaStream.getTracks().forEach(
             (track) => {
               if (pc && mediaStream) {
-                console.log('Putting track--->>>>>>>>>>>');
                 pc.addTrack(track, mediaStream);
               }
             },
@@ -98,15 +102,15 @@ export const useVideoRef = () => {
     };
     const init = async () => {
       if (isCaller) {
-        console.log('Caller');
         pc = new RTCPeerConnection(RTC_SERVERS);
         pc.onicecandidate = (iceCand) => {
-          dispatch(sendIceCandidateSocketAction(iceCand.candidate));
+          const candidate = iceCand.candidate?.toJSON();
+          if (candidate) {
+            dispatch(sendIceCandidateSocketAction(candidate));
+          }
         };
         pc.ontrack = (ev) => {
           if (remoteStream.current && !remoteStream.current.srcObject) {
-            console.log('Caller remote media set->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
-
             // eslint-disable-next-line prefer-destructuring
             remoteStream.current.srcObject = ev.streams[0];
           }
@@ -120,7 +124,10 @@ export const useVideoRef = () => {
               await pc.setLocalDescription(offer);
               const localDes = pc.localDescription;
               if (localDes) {
-                dispatch(sendRTCOfferSocketAction(localDes));
+                dispatch(sendRTCOfferSocketAction({
+                  type: localDes.type,
+                  sdp: localDes.sdp,
+                }));
               } else {
                 console.error('Local Description of caller in empty');
               }

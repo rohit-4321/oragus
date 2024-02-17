@@ -8,7 +8,7 @@ export type IRtcIceCandidate = {
   messageType: 'rtc',
   content: {
     contentType: 'rtcIceCandidate',
-    data: RTCIceCandidate | null
+    data: RTCIceCandidateInit | null
 
   }
 }
@@ -16,7 +16,7 @@ export type IRtcOffer = {
   messageType: 'rtc',
   content: {
     contentType: 'rtcOffer',
-    data: RTCSessionDescription
+    data: RTCSessionDescriptionInit
 
   }
 }
@@ -24,7 +24,7 @@ export type IRtcAnswer = {
   messageType: 'rtc',
   content: {
     contentType: 'rtcAnswer',
-    data: RTCSessionDescription
+    data: RTCSessionDescriptionInit
 
   }
 }

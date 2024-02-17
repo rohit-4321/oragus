@@ -19,8 +19,11 @@ export type ChatSliceState = {
     state: 'loading'
   },
   message: IChatTextMessage[],
-  remoteIceCand?: RTCIceCandidate | null,
-  remoteDescription?: RTCSessionDescription
+  // es lint giving unusual no-undef warning
+  // eslint-disable-next-line no-undef
+  remoteIceCand?: RTCIceCandidateInit | null,
+  // eslint-disable-next-line no-undef
+  remoteDescription?: RTCSessionDescriptionInit
 }
 
 const initialState : ChatSliceState = {
@@ -60,10 +63,12 @@ const chatSlice = createSlice({
         state.lastRecipientName = action.payload.name;
       }
     },
-    setRemoteIceCand: (state, action: PayloadAction<RTCIceCandidate>) => {
+    // eslint-disable-next-line no-undef
+    setRemoteIceCand: (state, action: PayloadAction<RTCIceCandidateInit>) => {
       state.remoteIceCand = action.payload;
     },
-    setRemoteDescription: (state, action: PayloadAction<RTCSessionDescription>) => {
+    // eslint-disable-next-line no-undef
+    setRemoteDescription: (state, action: PayloadAction<RTCSessionDescriptionInit>) => {
       state.remoteDescription = action.payload;
     },
   },

@@ -5,7 +5,6 @@ import store from '../store';
 const { pushMessage, setRemoteIceCand, setRemoteDescription } = chatSliceAction;
 
 export const chatMessageHandle = (mess: IChatMessage) => {
-  console.log(mess);
   if (mess.messageType === 'chat') {
     if (mess.content.contentType === 'text') {
       store.dispatch(pushMessage({
@@ -23,7 +22,6 @@ export const chatMessageHandle = (mess: IChatMessage) => {
       store.dispatch(setRemoteIceCand(cad));
     }
     if (mess.content.contentType === 'rtcOffer') {
-      console.log('OFFER RECIECECE___________________________________________________>');
       const offer = mess.content.data;
       if (offer) {
         store.dispatch(setRemoteDescription(offer));
