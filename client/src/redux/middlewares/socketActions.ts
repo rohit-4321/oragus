@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { createAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import chatSlice from '../slices/chatSlice';
@@ -64,6 +65,63 @@ export function socketInitRequestLeaveListener() {
         state: 'disconnected',
         reason: 'selfClose',
       }));
+    },
+  });
+}
+
+/* Send Ice candidate */
+export const sendIceCandidateSocketAction = createAction<RTCIceCandidateInit | null>(getActionName('sendIceCandidate'));
+export function socketInitSendIceCandidateListener() {
+  return startAppListening({
+    actionCreator: sendIceCandidateSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcIceCandidate',
+          data: action.payload,
+        },
+      });
+    },
+  });
+}
+
+/* Send RTC Offer */
+export const sendRTCOfferSocketAction = createAction<RTCSessionDescriptionInit>(getActionName('sendRTCOffer'));
+export function socketInitSendRtcOfferListerner() {
+  return startAppListening({
+    actionCreator: sendRTCOfferSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcOffer',
+          data: action.payload,
+        },
+      });
+    },
+  });
+}
+
+/* Send RTC Answer */
+export const sendRTCAnswerSocketAction = createAction<RTCSessionDescriptionInit>(getActionName('sendRTCAnswer'));
+export function socketInitSendRtcAnswerListener() {
+  return startAppListening({
+    actionCreator: sendRTCAnswerSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcAnswer',
+          data: action.payload,
+        },
+      });
     },
   });
 }

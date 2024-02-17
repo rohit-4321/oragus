@@ -8,7 +8,14 @@ import theme from './global/theme/theme.ts';
 import router from './global/routes/index.tsx';
 import store from './redux/store.ts';
 import { socketInit } from './redux/middlewares/socketInit';
-import { socketInitMessageListening, socketInitRequesJoinListener, socketInitRequestLeaveListener } from './redux/middlewares/socketActions.ts';
+import {
+  socketInitMessageListening,
+  socketInitRequesJoinListener,
+  socketInitRequestLeaveListener,
+  socketInitSendIceCandidateListener,
+  socketInitSendRtcAnswerListener,
+  socketInitSendRtcOfferListerner,
+} from './redux/middlewares/socketActions.ts';
 
 function App() {
   useLayoutEffect(() => {
@@ -16,11 +23,17 @@ function App() {
     const unsubMessageListener = socketInitMessageListening();
     const unsubRequestJoinListener = socketInitRequesJoinListener();
     const unsubRequestLeaveListener = socketInitRequestLeaveListener();
+    const unsubSocketInitSendIceCandidateListener = socketInitSendIceCandidateListener();
+    const unsubSocketInitSendRtcOfferListerner = socketInitSendRtcOfferListerner();
+    const unsubSocketInitSendRtcAnswerListener = socketInitSendRtcAnswerListener();
 
     return () => {
       unsubMessageListener({ cancelActive: true });
       unsubRequestLeaveListener({ cancelActive: true });
       unsubRequestJoinListener({ cancelActive: true });
+      unsubSocketInitSendIceCandidateListener({ cancelActive: true });
+      unsubSocketInitSendRtcAnswerListener({ cancelActive: true });
+      unsubSocketInitSendRtcOfferListerner({ cancelActive: true });
     };
   }, []);
   return (
