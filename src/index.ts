@@ -1,8 +1,9 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { createServer } from 'http';
 import { generateSocketInstance } from './connect/io';
+import path from 'path';
 
 dotenv.config();
 
@@ -18,8 +19,10 @@ app.use(cors({
     origin: 'http://localhost:5173' 
 }));
 
-app.get('/', (req: Request, res: Response) => {
-    res.send({name: 'Express'});
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
 });
 
 httpServer.listen(port, () => {

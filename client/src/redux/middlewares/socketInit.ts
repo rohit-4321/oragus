@@ -9,7 +9,7 @@ let socketInstance: Socket<ServerToClientEvents, ClientToServerEvents> | null = 
 
 export const socketInit = () => {
   if (socketInstance === null) {
-    socketInstance = io('http://localhost:3000');
+    socketInstance = io('ws://localhost:3000');
     socketInstance.on('connect', onConnect);
     socketInstance.on('disconnect', onDisConnect);
     onMessage(socketInstance);
