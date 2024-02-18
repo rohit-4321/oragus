@@ -43,7 +43,13 @@ export function socketInitRequesJoinListener() {
       if (!socket) return;
       const { selfState: { name } } = listenerApi.getState().chat;
       if (name) {
-        socket.emit('requestJoin', { userName: name });
+        socket.emit('message', {
+          messageType: 'event',
+          content: {
+            eventType: 'requestJoin',
+            data: { userName: name },
+          },
+        });
         listenerApi.dispatch(setRecipientState({
           state: 'loading',
         }));
@@ -60,7 +66,13 @@ export function socketInitRequestLeaveListener() {
     effect: (_, listenerApi) => {
       const socket = getSocket();
       if (!socket) return;
-      socket.emit('requestLeave');
+      socket.emit('message', {
+        messageType: 'event',
+        content: {
+          eventType: 'requestLeave',
+          data: null,
+        },
+      });
       listenerApi.dispatch(setRecipientState({
         state: 'disconnected',
         reason: 'selfClose',

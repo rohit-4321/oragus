@@ -28,10 +28,34 @@ export type IRtcAnswer = {
 
   }
 }
+
+type OnJoinParams = {
+  name: string,
+  isCaller: boolean
+}
+type RequestJoinParam = {
+  userName: string
+}
+export type IEvent = {
+  messageType: 'event',
+  content: {
+    eventType: 'userJoin',
+    data: OnJoinParams
+  } | {
+    eventType: 'userLeave',
+    data: unknown
+  } | {
+    eventType: 'requestJoin',
+    data: RequestJoinParam
+  } | {
+    eventType: 'requestLeave',
+    data: unknown
+  }
+}
 export type IChatMessage = {
   messageType: 'chat',
   content: {
     contentType: 'text',
     messageData: IChatTextMessage
   }
-} | IRtcIceCandidate | IRtcOffer | IRtcAnswer;
+} | IRtcIceCandidate | IRtcOffer | IRtcAnswer | IEvent;

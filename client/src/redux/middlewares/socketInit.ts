@@ -1,8 +1,7 @@
-/* eslint-disable no-use-before-define */
 import { Socket, io } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '../../../../schema/socket';
 import {
-  onConnect, onDisConnect, onMessage, onUserJoin, onUserLeave,
+  onConnect, onDisConnect, onMessage,
 } from './socketListeners';
 
 let socketInstance: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
@@ -13,8 +12,6 @@ export const socketInit = () => {
     socketInstance.on('connect', onConnect);
     socketInstance.on('disconnect', onDisConnect);
     onMessage(socketInstance);
-    onUserJoin(socketInstance);
-    onUserLeave(socketInstance);
   }
 };
 export const getSocket = () => socketInstance;
