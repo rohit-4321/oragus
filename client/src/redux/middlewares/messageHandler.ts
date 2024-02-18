@@ -2,7 +2,14 @@ import { IChatMessage } from '../../../../schema';
 import { chatSliceAction } from '../slices/chatSlice';
 import store from '../store';
 
-const { pushMessage, setRemoteIceCand, setRemoteDescription } = chatSliceAction;
+const {
+  pushMessage,
+  setRemoteIceCand,
+  setRemoteDescription,
+  setSelfIsCallerState,
+  emptyMessageList,
+  setRecipientState,
+} = chatSliceAction;
 
 export const chatMessageHandle = (mess: IChatMessage) => {
   if (mess.messageType === 'chat') {
@@ -36,6 +43,23 @@ export const chatMessageHandle = (mess: IChatMessage) => {
       } else {
         console.info('Remote offer empty');
       }
+    }
+  } else if (mess.messageType === 'event') {
+    if (mess.content.eventType === 'userJoin') {
+      const recipientData = mess.content.data;
+      store.dispatch(setRecipientState({
+        state: 'connected',
+        name: recipientData.name,
+        isCaller: recipientData.isCaller,
+      }));
+      store.dispatch(setSelfIsCallerState(!recipientData.isCaller));
+      store.dispatch(emptyMessageList());
+    }
+    if (mess.content.eventType === 'userLeave') {
+      store.dispatch(setRecipientState({
+        state: 'disconnected',
+        reason: 'recipientClose',
+      }));
     }
   }
 };
