@@ -16,9 +16,11 @@ import {
   socketInitSendRtcAnswerListener,
   socketInitSendRtcOfferListerner,
 } from './redux/middlewares/socketActions.ts';
+import { getRTCInstance } from './redux/middlewares/rtc/RTC.ts';
 
 function App() {
   useLayoutEffect(() => {
+    getRTCInstance();
     socketInit();
     const unsubMessageListener = socketInitMessageListening();
     const unsubRequestJoinListener = socketInitRequesJoinListener();
