@@ -137,3 +137,41 @@ export function socketInitSendRtcAnswerListener() {
     },
   });
 }
+
+/* WebRTC Renegotiation Connection info */
+export const sendRTCRenegotiationOfferSocketAction = createAction<RTCSessionDescriptionInit>(getActionName('sendRTCOfferrenegotiation'));
+export function rtcOfferRenegotiationListener() {
+  return startAppListening({
+    actionCreator: sendRTCRenegotiationOfferSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcOffer-renegatiation',
+          data: action.payload,
+        },
+      });
+    },
+  });
+}
+
+export const sendRTCRenegotiationAnswerSocketAction = createAction<RTCSessionDescriptionInit>(getActionName('sendRTCAnswerrenegotiation'));
+export function rtcAnswerRenotiation() {
+  return startAppListening({
+    actionCreator: sendRTCRenegotiationAnswerSocketAction,
+    effect: (action) => {
+      const socket = getSocket();
+      if (!socket) return;
+      socket.emit('message', {
+        messageType: 'rtc',
+        content: {
+          contentType: 'rtcAnswer-renegatiation',
+          data: action.payload,
+        },
+      });
+    },
+
+  });
+}

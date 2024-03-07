@@ -28,12 +28,28 @@ export type IRtcAnswer = {
 
   }
 }
+export type IRtcOfferRenegotiation = {
+  messageType: 'rtc',
+  content: {
+    contentType: 'rtcOffer-renegatiation',
+    data: RTCSessionDescriptionInit
 
-type OnJoinParams = {
+  }
+}
+export type IRtcAnswerRenegotiation = {
+  messageType: 'rtc',
+  content: {
+    contentType: 'rtcAnswer-renegatiation',
+    data: RTCSessionDescriptionInit
+
+  }
+}
+
+export type OnJoinParams = {
   name: string,
   isCaller: boolean
 }
-type RequestJoinParam = {
+export type RequestJoinParam = {
   userName: string
 }
 export type IEvent = {
@@ -58,4 +74,4 @@ export type IChatMessage = {
     contentType: 'text',
     messageData: IChatTextMessage
   }
-} | IRtcIceCandidate | IRtcOffer | IRtcAnswer | IEvent;
+} | IRtcIceCandidate | IRtcOffer | IRtcAnswer | IRtcOfferRenegotiation | IRtcAnswerRenegotiation | IEvent;

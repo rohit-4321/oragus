@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IChatTextMessage } from '../../../../schema';
+import { getRTCInstance } from '../middlewares/rtc/RTC';
 
 export type ChatSliceState = {
   selfState: {
@@ -61,6 +62,12 @@ const chatSlice = createSlice({
       state.recipientState = action.payload;
       if (action.payload.state === 'connected') {
         state.lastRecipientName = action.payload.name;
+      }
+
+      if (action.payload.state === 'disconnected'
+      && (action.payload.reason === 'recipientClose'
+      || action.payload.reason === 'selfClose')) {
+        getRTCInstance().onClose();
       }
     },
     // eslint-disable-next-line no-undef
