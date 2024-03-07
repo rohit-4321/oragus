@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import { RTC_SERVERS } from '../../../constant';
+import { Subject } from './Subject';
 
 let rtcInstance: RTC | null = null;
 export function getRTCInstance() {
@@ -15,22 +16,25 @@ export function getRTCInstance() {
 export class RTC {
   private peerConnection: RTCPeerConnection;
 
-  private isMasterPeer: boolean = false;
+  public isMasterPeer: boolean = false;
 
-  public tracks: RTCTrackEvent | null = null;
+  public tracks: Subject<RTCTrackEvent | null>;
 
   constructor() {
     this.peerConnection = new RTCPeerConnection(RTC_SERVERS);
-    this.peerConnection.ontrack = (ev) => {
-      this.tracks = ev;
-    };
+    this.tracks = new Subject<RTCTrackEvent | null>(null);
   }
 
-  initConnection(isMasterPeer: boolean = false) {
+  initConnection(iamaster: boolean = false) {
+    this.isMasterPeer = iamaster;
     if (this.peerConnection.connectionState === 'closed'
-    || this.peerConnection.connectionState === 'disconnected') {
+    || this.peerConnection.connectionState === 'disconnected'
+    || this.peerConnection.connectionState === 'new') {
+      this.peerConnection.ontrack = null;
       this.peerConnection = new RTCPeerConnection(RTC_SERVERS);
-      this.isMasterPeer = isMasterPeer;
+      this.peerConnection.ontrack = (ev) => {
+        this.tracks.value = ev;
+      };
     }
   }
 
@@ -39,12 +43,9 @@ export class RTC {
     if (!this.isMasterPeer) {
       throw Error('Only Master Peer can create offer for connection');
     }
-    if (this.peerConnection.signalingState === 'closed') {
-      const offer = await this.peerConnection.createOffer();
-      await this.peerConnection.setLocalDescription(offer);
-      return this.peerConnection.localDescription;
-    }
-    throw Error(`cannot initiate offer with singnaling state ${this.peerConnection.signalingState}`);
+    const offer = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offer);
+    return this.peerConnection.localDescription;
   }
 
   /* Non Master received offer for New Connection */
@@ -62,7 +63,7 @@ export class RTC {
   }
 
   /* Handle Answer For New Connection */
-  async handleConnectionAnswer(answer: RTCSessionDescriptionInit) {
+  handleConnectionAnswer(answer: RTCSessionDescriptionInit) {
     if (!this.isMasterPeer) {
       throw Error('Only Master Peer can receive first answer for connection');
     }
@@ -72,10 +73,36 @@ export class RTC {
   }
 
   /* Renegotiation */
+  async createRenegotiationOffer() {
+    // if (this.peerConnection.signalingState !== 'stable') {
+    //   throw Error('Signaling State is not stable');
+    // }
+    const offer = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offer);
+    return this.peerConnection.localDescription;
+  }
+
+  async handleRenegotiationOffer(offer: RTCSessionDescriptionInit) {
+    if (this.peerConnection.signalingState === 'have-remote-offer') {
+      throw Error('already have offer');
+    }
+    await this.peerConnection.setRemoteDescription(offer);
+    const answer = await this.peerConnection.createAnswer();
+    await this.peerConnection.setLocalDescription(answer);
+    return this.peerConnection.localDescription;
+  }
+
+  handleRenegotiationAnswer(answer: RTCSessionDescriptionInit) {
+    if (this.peerConnection.signalingState === 'have-local-offer') {
+      this.peerConnection.setRemoteDescription(answer);
+    }
+  }
 
   /* Common Function to both peer */
   addIceCandidate(iceCandidate: RTCIceCandidateInit | undefined) {
-    this.peerConnection.addIceCandidate(iceCandidate);
+    if (this.peerConnection.remoteDescription) {
+      this.peerConnection.addIceCandidate(iceCandidate);
+    }
   }
 
   onIceCandidate(
@@ -89,17 +116,25 @@ export class RTC {
     };
   }
 
+  addTracks(track: MediaStreamTrack, ...streams: MediaStream[]) {
+    this.peerConnection.addTrack(track, ...streams);
+  }
+
   getTrack() {
     return this.tracks;
   }
 
-  onTrack(callback: (params: RTCTrackEvent) => void) {
-    this.peerConnection.ontrack = (ev) => {
-      callback(ev);
-    };
-  }
+  // onTrack(callback: (params: RTCTrackEvent) => void) {
+  //   this.peerConnection.ontrack = (ev) => {
+  //     callback(ev);
+  //   };
+  // }
 
   onClose() {
     this.peerConnection.close();
+    this.peerConnection.ontrack = null;
+    this.peerConnection.onicecandidate = null;
+    this.tracks.value = null;
+    this.peerConnection.ontrack = null;
   }
 }

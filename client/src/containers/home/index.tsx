@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { chatSliceAction } from '../../redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { requestJoinSocketAction } from '../../redux/middlewares/socketActions';
+import { getSMedia } from '../../redux/middlewares/rtc/SMedia';
 
 const { setName } = chatSliceAction;
 const Home = () => {
@@ -19,8 +20,14 @@ const Home = () => {
   };
   const onEnter = () => {
     if (name) {
-      navigate('/chat');
-      dispatch(requestJoinSocketAction());
+      const mediaObject = getSMedia();
+      mediaObject.getUserVideoStream()
+        .then(() => {
+          navigate('/chat');
+          dispatch(requestJoinSocketAction());
+        }).catch((err) => {
+          console.log('strem err', err);
+        });
     }
   };
   return (

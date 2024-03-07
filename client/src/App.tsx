@@ -9,6 +9,8 @@ import router from './global/routes/index.tsx';
 import store from './redux/store.ts';
 import { socketInit } from './redux/middlewares/socketInit';
 import {
+  rtcAnswerRenotiation,
+  rtcOfferRenegotiationListener,
   socketInitMessageListening,
   socketInitRequesJoinListener,
   socketInitRequestLeaveListener,
@@ -28,6 +30,8 @@ function App() {
     const unsubSocketInitSendIceCandidateListener = socketInitSendIceCandidateListener();
     const unsubSocketInitSendRtcOfferListerner = socketInitSendRtcOfferListerner();
     const unsubSocketInitSendRtcAnswerListener = socketInitSendRtcAnswerListener();
+    const unsubrtcOfferRenegotiationListener = rtcOfferRenegotiationListener();
+    const unsebrtcAnswerRenotiation = rtcAnswerRenotiation();
 
     return () => {
       unsubMessageListener({ cancelActive: true });
@@ -36,6 +40,8 @@ function App() {
       unsubSocketInitSendIceCandidateListener({ cancelActive: true });
       unsubSocketInitSendRtcAnswerListener({ cancelActive: true });
       unsubSocketInitSendRtcOfferListerner({ cancelActive: true });
+      unsubrtcOfferRenegotiationListener({ cancelActive: true });
+      unsebrtcAnswerRenotiation({ cancelActive: true });
     };
   }, []);
   return (
