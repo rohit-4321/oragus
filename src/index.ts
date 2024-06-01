@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { createServer } from 'http';
 import { generateSocketInstance } from './connect/io';
-import path from 'path';
 
 dotenv.config();
 
@@ -19,10 +18,16 @@ app.use(cors({
     origin: 'http://localhost:5173' 
 }));
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+// });
+
+app.get('/ping', (req, res) => {
+    res.json({
+        result: 'pong.'
+    });
 });
 
 httpServer.listen(port, () => {
