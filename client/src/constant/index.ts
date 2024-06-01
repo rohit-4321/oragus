@@ -10,3 +10,4 @@ export const RTC_SERVERS = {
     },
   ],
 };
+export const WSS_URL = 'wss://192.168.0.195:3000';

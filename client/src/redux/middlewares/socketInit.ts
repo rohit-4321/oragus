@@ -3,12 +3,13 @@ import { ClientToServerEvents, ServerToClientEvents } from '../../../../schema/s
 import {
   onConnect, onDisConnect, onMessage,
 } from './socketListeners';
+import { WSS_URL } from '../../constant';
 
 let socketInstance: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
 
 export const socketInit = () => {
   if (socketInstance === null) {
-    socketInstance = io('ws://localhost:3000');
+    socketInstance = io(WSS_URL);
     socketInstance.on('connect', onConnect);
     socketInstance.on('disconnect', onDisConnect);
     onMessage(socketInstance);
