@@ -1,9 +1,10 @@
 import React, { memo, useRef } from 'react';
 import {
-  Button, Paper, Stack, TextField, Typography,
+  Box, Button, Paper, Stack, TextField, Typography,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import { chatSliceAction } from '../../redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { requestJoinSocketAction } from '../../redux/middlewares/socketActions';
@@ -11,6 +12,7 @@ import { getSMedia } from '../../redux/middlewares/rtc/SMedia';
 
 const { setName } = chatSliceAction;
 const Home = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const enterButtonRef = useRef<HTMLButtonElement>(null);
@@ -25,8 +27,15 @@ const Home = () => {
         .then(() => {
           navigate('/chat');
           dispatch(requestJoinSocketAction());
-        }).catch((err) => {
-          console.log('strem err', err);
+        }).catch(() => {
+          enqueueSnackbar('Unable To Open Camera', {
+            preventDuplicate: true,
+            variant: 'error',
+            style: {
+              fontFamily: 'sans-serif',
+              fontSize: '1.1rem',
+            },
+          });
         });
     }
   };

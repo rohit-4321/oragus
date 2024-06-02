@@ -4,6 +4,7 @@ import {
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { useLayoutEffect } from 'react';
+import { SnackbarProvider } from 'notistack';
 import theme from './global/theme/theme.ts';
 import router from './global/routes/index.tsx';
 import store from './redux/store.ts';
@@ -55,7 +56,9 @@ function App() {
             },
           }}
         />
-        <RouterProvider router={router} />
+        <SnackbarProvider>
+          <RouterProvider router={router} />
+        </SnackbarProvider>
       </Provider>
     </ThemeProvider>
   );
