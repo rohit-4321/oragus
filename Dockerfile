@@ -1,6 +1,6 @@
 # Stage 1:- Building
 
-# Using node 16 version
+# Using node 18 version
 FROM node:18-alpine AS build
 
 WORKDIR /usr/src/oragus_backend
