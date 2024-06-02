@@ -26,7 +26,7 @@ app.use(cors({
 
 app.get('/ping', (req, res) => {
     res.json({
-        result: 'pong.'
+        result: 'pong..'
     });
 });
 

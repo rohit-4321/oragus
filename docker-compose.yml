@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  oragus_backend_dev:
+    image: oragus_backend_dev
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: oragus_backend_container_dev
+    volumes:
+      - .:/usr/src/oragus_backend
+      - /usr/src/oragus_backend/node_modules
+    ports:
+      - "3000:3000"
+    command: ["npm", "run", "dev"]
+    environment:
+      - NODE_ENV=development
+
+  oragus_backend_prod:
+    image: oragus_backend_prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oragus_backend_container_prod
+    ports:
+      - "3000:3000"
+    command: ["npm", "start"]
+    environment:
+      - NODE_ENV=production
