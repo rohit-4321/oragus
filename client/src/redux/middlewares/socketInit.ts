@@ -11,6 +11,9 @@ export const socketInit = () => {
     socketInstance = io('ws://localhost:3000');
     socketInstance.on('connect', onConnect);
     socketInstance.on('disconnect', onDisConnect);
+    socketInstance.on('connect_error', (err) => {
+      console.error('Socket Connect Error: ', err);
+    });
     onMessage(socketInstance);
   }
 };

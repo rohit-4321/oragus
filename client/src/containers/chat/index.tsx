@@ -13,7 +13,7 @@ const Chat = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
-  const gap = useMemo(() => (isSmall ? theme.spacing(1) : theme.spacing(2)), [isSmall, theme]);
+  const gap = useMemo(() => (isSmall ? theme.spacing(0) : theme.spacing(2)), [isSmall, theme]);
 
   useEffect(() => {
     if (!userName) {

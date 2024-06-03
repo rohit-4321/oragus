@@ -48,7 +48,7 @@ const Home = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <Paper elevation={1}>
+      <Paper elevation={1} variant="outlined">
         <Stack
           sx={{
             margin: '10px 15px',
