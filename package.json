@@ -8,7 +8,9 @@
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "build": "npx tsc",
     "start": "node dist/src/index.js",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "backend:dev": "docker compose up oragus_backend_dev"
+
   },
   "author": "",
   "license": "ISC",

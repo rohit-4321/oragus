@@ -26,6 +26,7 @@ const Chat = () => {
       width: '100%',
       height: '100vh',
       padding: isSmall ? '0' : '8px',
+      backgroundColor: 'lightgray',
     }}
     >
       <Stack

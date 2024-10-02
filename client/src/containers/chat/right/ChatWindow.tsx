@@ -91,6 +91,7 @@ const ChatHeader = () => {
         px: 1,
         py: 1,
         backgroundColor: 'white',
+        borderBottom: '1px solid lightgray',
       }}
       direction="row"
       justifyContent="space-between"
@@ -100,12 +101,12 @@ const ChatHeader = () => {
           ? (
             <>
               <Typography />
-              <Button onClick={onJoin}>Join</Button>
+              <Button sx={{ color: '#32a852', fontSize: '1.2rem' }} onClick={onJoin}>Join</Button>
             </>
           ) : (
             <>
               <Typography>{recipientState.name}</Typography>
-              <Button onClick={onLeave}>Leave</Button>
+              <Button sx={{ color: 'red', fontSize: '1.2rem' }} onClick={onLeave}>Leave</Button>
             </>
           )
       }
