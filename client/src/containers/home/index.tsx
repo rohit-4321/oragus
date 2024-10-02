@@ -1,10 +1,12 @@
 import React, { memo, useRef } from 'react';
 import {
-  Box, Button, Paper, Stack, TextField, Typography,
+  IconButton,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import skyBackground from '../../../public/sky.jpg';
 import { chatSliceAction } from '../../redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { requestJoinSocketAction } from '../../redux/middlewares/socketActions';
@@ -40,50 +42,50 @@ const Home = () => {
     }
   };
   return (
-    <Stack
-      sx={{
-        width: '100%',
-        height: '100vh',
-      }}
-      alignItems="center"
-      justifyContent="center"
+    <div
+      className="w-[100%] h-[100vh] flex justify-center bg-white"
     >
-      <Paper elevation={1} variant="outlined">
-        <Stack
-          sx={{
-            margin: '10px 15px',
-          }}
-          gap={2}
-        >
-          <Typography
-            fontSize={30}
-            fontWeight={700}
-            fontFamily="sans-serif"
-          >
-            ORAGUS
-          </Typography>
-          <TextField
-            size="small"
-            onKeyDown={(ev) => {
-              if (ev.key === 'Enter') {
-                ev.preventDefault();
-                enterButtonRef.current?.focus();
-              }
-            }}
-            placeholder="Enter your name"
-            value={name}
-            onChange={onNameChange}
-          />
-          <Button
-            ref={enterButtonRef}
-            onClick={onEnter}
-            variant="contained"
-          >
-            Enter
-          </Button>
-        </Stack>
-      </Paper>
-    </Stack>
+      <div className="flex-[2] relative overflow-hidden hidden md:block">
+        {' '}
+        {/* Add relative positioning here */}
+        <img src={skyBackground} alt="backgroundImage" className="w-full h-full object-cover z-0" />
+        <div className="absolute w-[80%] top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2">
+          <h1 className=" font-serif  z-10 font-bold text-4xl  text-white text-center">
+            Connect instantly with strangers worldwide through video and chat
+          </h1>
+          <p className="text-emerald-200 text-xl text-right mr-10">—meet someone new now!</p>
+        </div>
+      </div>
+      <div className="flex-[3] flex items-center justify-center">
+        <div className="w-[70%] border border-gray-300 rounded-lg bg-slate-100 shadow-md p-4">
+          <h1 className="z-10 font-bold text-7xl text-green-500 mb-[10px] ">Oragus</h1>
+          <p className="z-10 font-bold text-2xl text-gray-500 mb-[10px] ">What is your name so we can get started?</p>
+          <div className="flex gap-1">
+            <input
+              type="text"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:outline-none focus:ring-green-300 block flex-1 p-2.5"
+              placeholder="Enter your name"
+              value={name}
+              onChange={onNameChange}
+              onKeyDown={(ev) => {
+                if (ev.key === 'Enter') {
+                  ev.preventDefault();
+                  enterButtonRef.current?.focus();
+                }
+              }}
+            />
+
+            <IconButton
+              ref={enterButtonRef}
+              onClick={onEnter}
+            >
+              <ArrowForwardIcon />
+            </IconButton>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 };
 export default memo(Home);
